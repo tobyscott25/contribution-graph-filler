@@ -1,52 +1,15 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
+
+	"github.com/tobyscott25/contribution-graph-filler/files"
 )
-
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
-}
-
-func addLineToEndOfFile(filename string, line string) error {
-	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := bufio.NewWriter(file)
-	_, err = fmt.Fprintln(writer, line)
-	if err != nil {
-		return err
-	}
-	return writer.Flush()
-}
-
-func editDummyCommitFile(filePath string, dummyCommitIteration int) {
-
-	if !fileExists(filePath) {
-		file, err := os.Create(filePath)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer file.Close()
-	}
-
-	addLineToEndOfFile(filePath, "I must not tell lies.")
-}
 
 func main() {
 
@@ -84,7 +47,7 @@ func main() {
 		return
 	}
 
-	editDummyCommitFile(dummyCommitFilePath, 1)
+	files.EditDummyCommitFile(dummyCommitFilePath, 1)
 
 	_, err = workTree.Add(dummyCommitFileName)
 	if err != nil {
