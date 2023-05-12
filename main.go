@@ -2,38 +2,35 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
 
+	"github.com/tobyscott25/contribution-graph-filler/dates"
 	"github.com/tobyscott25/contribution-graph-filler/files"
 )
 
 func main() {
 
-	// // Get the epoch timestamp from the command-line argument
-	// if len(os.Args) < 2 {
-	// 	fmt.Println("Usage: go run main.go <epoch>")
-	// 	return
-	// }
-	// epochStr := os.Args[1]
-	// epoch, err := strconv.ParseInt(epochStr, 10, 64)
-	// if err != nil {
-	// 	fmt.Println("Error parsing epoch:", err)
-	// 	return
-	// }
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run main.go </path/to/repo>")
+		return
+	}
 
-	// // Convert the epoch to a time.Time value and format to be human-readable
-	// t := time.Unix(epoch, 0)
-	// formattedTime := t.UTC().Format("2 January 2006 15:04:05 MST")
-
-	// fmt.Println("Commit created at: " + formattedTime)
-
-	dummyCommitRepoPath := "../dummy-commit-repo"
-	dummyCommitFileName := "dummy-commit-iterations.txt"
+	dummyCommitRepoPath := os.Args[1]
+	// dummyCommitRepoPath := "../dummy-commit-repo"
+	dummyCommitFileName := "dummy-commits.txt"
 	dummyCommitFilePath := dummyCommitRepoPath + "/" + dummyCommitFileName
+
+	joinDate, err := dates.AskUserForDate()
+	if err != nil {
+		fmt.Println("Error taking user input:", err)
+		return
+	}
+	fmt.Println("Join date:", joinDate)
 
 	repository, err := git.PlainOpen(dummyCommitRepoPath)
 	if err != nil {
@@ -66,7 +63,7 @@ func main() {
 
 	globalGitConfig, _ := config.LoadConfig(1)
 
-	commit, err := workTree.Commit("example go-git commit", &git.CommitOptions{
+	commit, err := workTree.Commit("Synthetic Commit", &git.CommitOptions{
 		Author: &object.Signature{
 			Name:  globalGitConfig.User.Name,
 			Email: globalGitConfig.User.Email,
