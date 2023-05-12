@@ -18,6 +18,12 @@ func AskUserForDate() (time.Time, error) {
 	return parsedDate, nil
 }
 
+func DaysBetween(start time.Time, end time.Time) int {
+	duration := end.Sub(start)
+	days := int(duration.Hours() / 24)
+	return days
+}
+
 func ParseEpoch(epoch int64) time.Time {
 	// Convert the epoch to a time.Time value
 	return time.Unix(epoch, 0)

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -31,6 +32,9 @@ func main() {
 		return
 	}
 	fmt.Println("Join date:", joinDate)
+
+	daysBetween := dates.DaysBetween(joinDate, time.Now())
+	fmt.Println("Will create " + strconv.Itoa(daysBetween) + " dummy commits.")
 
 	repository, err := git.PlainOpen(dummyCommitRepoPath)
 	if err != nil {
