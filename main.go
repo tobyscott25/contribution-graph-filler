@@ -26,16 +26,6 @@ func main() {
 	dummyCommitFileName := "dummy-commits.txt"
 	dummyCommitFilePath := dummyCommitRepoPath + "/" + dummyCommitFileName
 
-	joinDate, err := dates.AskUserForDate()
-	if err != nil {
-		fmt.Println("Error taking user input:", err)
-		return
-	}
-	fmt.Println("Join date:", joinDate)
-
-	daysBetween := dates.DaysBetween(joinDate, time.Now())
-	fmt.Println("Will create " + strconv.Itoa(daysBetween) + " dummy commits.")
-
 	repository, err := git.PlainOpen(dummyCommitRepoPath)
 	if err != nil {
 		fmt.Println("Error opening repository:", err)
@@ -47,6 +37,16 @@ func main() {
 		fmt.Println("Error getting worktree from repository:", err)
 		return
 	}
+
+	joinDate, err := dates.AskUserForDate()
+	if err != nil {
+		fmt.Println("Error taking user input:", err)
+		return
+	}
+	fmt.Println("Join date:", joinDate)
+
+	daysBetween := dates.DaysBetween(joinDate, time.Now())
+	fmt.Println("Will create " + strconv.Itoa(daysBetween) + " dummy commits.")
 
 	files.EditDummyCommitFile(dummyCommitFilePath, 1)
 
