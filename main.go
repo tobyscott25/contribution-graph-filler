@@ -37,13 +37,28 @@ func main() {
 		return
 	}
 
-	startDate, err := helper.AskUserForDate()
+	fmt.Println("Enter a start date (DD-MM-YYYY):")
+	var startInput string
+	fmt.Scanln(&startInput)
+	startDate, err := helper.ParseDateInput(startInput)
 	if err != nil {
-		fmt.Println("Error taking user input:", err)
+		fmt.Println("Invalid date format. Please try again.", err)
 		return
 	}
 
-	endDate := time.Now()
+	fmt.Println("Enter an end date (DD-MM-YYYY): (Leave blank to use today as the end date)")
+	var input string
+	fmt.Scanln(&input)
+	var endDate time.Time
+	if input == "" {
+		endDate = time.Now()
+	} else {
+		endDate, err = helper.ParseDateInput(input)
+		if err != nil {
+			fmt.Println("Invalid date format. Please try again.", err)
+			return
+		}
+	}
 
 	for date := startDate; !date.After(endDate); date = date.AddDate(0, 0, 1) {
 
