@@ -37,18 +37,20 @@ func main() {
 		return
 	}
 
-	joinDate, err := dates.AskUserForDate()
+	startDate, err := dates.AskUserForDate()
 	if err != nil {
 		fmt.Println("Error taking user input:", err)
 		return
 	}
-	fmt.Println("Join date:", joinDate)
 
-	end := time.Now()
-	for date := joinDate; !date.After(end); date = date.AddDate(0, 0, 1) {
+	endDate := time.Now()
+
+	for date := startDate; !date.After(endDate); date = date.AddDate(0, 0, 1) {
 
 		formattedDate := date.Format("Mon 02 Jan 2006")
 		fmt.Println(formattedDate)
+		numberOfCommits := commits.NumberOfCommits(date.Weekday() != time.Saturday && date.Weekday() != time.Sunday)
+		fmt.Println("NumberOfCommits:", numberOfCommits)
 
 		commits.EditDummyCommitFile(dummyCommitFilePath)
 
@@ -68,23 +70,26 @@ func main() {
 
 		globalGitConfig, _ := config.LoadConfig(1)
 
-		commit, err := workTree.Commit("Synthetic commit for "+formattedDate, &git.CommitOptions{
-			Author: &object.Signature{
-				Name:  globalGitConfig.User.Name,
-				Email: globalGitConfig.User.Email,
-				When:  date,
-			},
-		})
-		if err != nil {
-			fmt.Println("Error creating commit:", err)
-			return
-		}
+		for i := 0; i < numberOfCommits; i++ {
 
-		commitObject, err := repository.CommitObject(commit)
-		if err != nil {
-			fmt.Println("Error getting commit:", err)
-			return
+			commit, err := workTree.Commit("Synthetic commit for "+formattedDate, &git.CommitOptions{
+				Author: &object.Signature{
+					Name:  globalGitConfig.User.Name,
+					Email: globalGitConfig.User.Email,
+					When:  date,
+				},
+			})
+			if err != nil {
+				fmt.Println("Error creating commit:", err)
+				return
+			}
+
+			commitObject, err := repository.CommitObject(commit)
+			if err != nil {
+				fmt.Println("Error getting commit:", err)
+				return
+			}
+			fmt.Println(commitObject)
 		}
-		fmt.Println(commitObject)
 	}
 }
