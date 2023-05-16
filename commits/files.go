@@ -29,7 +29,7 @@ func AddLineToEndOfFile(filename string, line string) error {
 	return writer.Flush()
 }
 
-func EditDummyCommitFile(filePath string, dummyCommitIteration int) {
+func EditDummyCommitFile(filePath string) {
 
 	if !FileExists(filePath) {
 		file, err := os.Create(filePath)

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -45,12 +44,13 @@ func main() {
 	}
 	fmt.Println("Join date:", joinDate)
 
-	daysBetween := dates.DaysBetween(joinDate, time.Now())
-	fmt.Println("Will create " + strconv.Itoa(daysBetween) + " dummy commits.")
+	end := time.Now()
+	for date := joinDate; !date.After(end); date = date.AddDate(0, 0, 1) {
 
-	for i := 0; i < daysBetween; i++ {
+		formattedDate := date.Format("Mon 02 Jan 2006")
+		fmt.Println(formattedDate)
 
-		commits.EditDummyCommitFile(dummyCommitFilePath, i)
+		commits.EditDummyCommitFile(dummyCommitFilePath)
 
 		_, err = workTree.Add(dummyCommitFileName)
 		if err != nil {
@@ -68,11 +68,11 @@ func main() {
 
 		globalGitConfig, _ := config.LoadConfig(1)
 
-		commit, err := workTree.Commit("Synthetic Commit No. "+strconv.Itoa(i), &git.CommitOptions{
+		commit, err := workTree.Commit("Synthetic commit for "+formattedDate, &git.CommitOptions{
 			Author: &object.Signature{
 				Name:  globalGitConfig.User.Name,
 				Email: globalGitConfig.User.Email,
-				When:  time.Now().AddDate(0, 0, -i),
+				When:  date,
 			},
 		})
 		if err != nil {
