@@ -1,4 +1,4 @@
-package files
+package commits
 
 import (
 	"bufio"

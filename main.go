@@ -10,8 +10,8 @@ import (
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
 
+	"github.com/tobyscott25/contribution-graph-filler/commits"
 	"github.com/tobyscott25/contribution-graph-filler/dates"
-	"github.com/tobyscott25/contribution-graph-filler/files"
 )
 
 func main() {
@@ -50,7 +50,7 @@ func main() {
 
 	for i := 0; i < daysBetween; i++ {
 
-		files.EditDummyCommitFile(dummyCommitFilePath, i)
+		commits.EditDummyCommitFile(dummyCommitFilePath, i)
 
 		_, err = workTree.Add(dummyCommitFileName)
 		if err != nil {
