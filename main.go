@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
 
-	"github.com/tobyscott25/contribution-graph-filler/commits"
-	"github.com/tobyscott25/contribution-graph-filler/dates"
+	"github.com/tobyscott25/contribution-graph-filler/helper"
 )
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
 		return
 	}
 
-	startDate, err := dates.AskUserForDate()
+	startDate, err := helper.AskUserForDate()
 	if err != nil {
 		fmt.Println("Error taking user input:", err)
 		return
@@ -47,32 +47,28 @@ func main() {
 
 	for date := startDate; !date.After(endDate); date = date.AddDate(0, 0, 1) {
 
-		formattedDate := date.Format("Mon 02 Jan 2006")
-		fmt.Println(formattedDate)
-		numberOfCommits := commits.NumberOfCommits(date.Weekday() != time.Saturday && date.Weekday() != time.Sunday)
-		fmt.Println("NumberOfCommits:", numberOfCommits)
-
-		commits.EditDummyCommitFile(dummyCommitFilePath)
-
-		_, err = workTree.Add(dummyCommitFileName)
-		if err != nil {
-			fmt.Println("Error staging file:", err)
-			return
-		}
-
-		status, err := workTree.Status()
-		if err != nil {
-			fmt.Println("Error getting the working tree status:", err)
-			return
-		}
-		fmt.Println("Git status:")
-		fmt.Println(status)
-
-		globalGitConfig, _ := config.LoadConfig(1)
+		formattedDate := helper.HumanReadableFormat(date)
+		numberOfCommits := helper.NumberOfCommits(date.Weekday() != time.Saturday && date.Weekday() != time.Sunday)
 
 		for i := 0; i < numberOfCommits; i++ {
 
-			commit, err := workTree.Commit("Synthetic commit for "+formattedDate, &git.CommitOptions{
+			helper.EditDummyCommitFile(dummyCommitFilePath)
+
+			_, err = workTree.Add(dummyCommitFileName)
+			if err != nil {
+				fmt.Println("Error staging file:", err)
+				return
+			}
+
+			_, err := workTree.Status()
+			if err != nil {
+				fmt.Println("Error getting the working tree status:", err)
+				return
+			}
+
+			globalGitConfig, _ := config.LoadConfig(1)
+
+			commit, err := workTree.Commit("Commit #"+strconv.Itoa(i+1)+" for "+formattedDate, &git.CommitOptions{
 				Author: &object.Signature{
 					Name:  globalGitConfig.User.Name,
 					Email: globalGitConfig.User.Email,

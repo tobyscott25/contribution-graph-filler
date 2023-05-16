@@ -1,6 +1,4 @@
-// should make multiple commits some days
-
-package commits
+package helper
 
 import "math/rand"
 
