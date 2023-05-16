@@ -42,7 +42,7 @@ func main() {
 	fmt.Scanln(&startInput)
 	startDate, err := helper.ParseDateInput(startInput)
 	if err != nil {
-		fmt.Println("Invalid date format. Please try again.", err)
+		fmt.Println("Invalid date format. Please try again.")
 		return
 	}
 
@@ -55,9 +55,25 @@ func main() {
 	} else {
 		endDate, err = helper.ParseDateInput(input)
 		if err != nil {
-			fmt.Println("Invalid date format. Please try again.", err)
+			fmt.Println("Invalid date format. Please try again.")
 			return
 		}
+	}
+
+	globalGitConfig, _ := config.LoadConfig(1)
+
+	fmt.Println("Enter your name: (Leave blank to use global git config: " + globalGitConfig.User.Name + ")")
+	var authorName string
+	fmt.Scanln(&authorName)
+	if authorName == "" {
+		authorName = globalGitConfig.User.Name
+	}
+
+	fmt.Println("Enter your email: (Leave blank to use global git config: " + globalGitConfig.User.Email + ")")
+	var authorEmail string
+	fmt.Scanln(&authorEmail)
+	if authorEmail == "" {
+		authorEmail = globalGitConfig.User.Email
 	}
 
 	for date := startDate; !date.After(endDate); date = date.AddDate(0, 0, 1) {
@@ -81,12 +97,10 @@ func main() {
 				return
 			}
 
-			globalGitConfig, _ := config.LoadConfig(1)
-
 			commit, err := workTree.Commit("Commit #"+strconv.Itoa(i+1)+" for "+formattedDate, &git.CommitOptions{
 				Author: &object.Signature{
-					Name:  globalGitConfig.User.Name,
-					Email: globalGitConfig.User.Email,
+					Name:  authorName,
+					Email: authorEmail,
 					When:  date,
 				},
 			})
