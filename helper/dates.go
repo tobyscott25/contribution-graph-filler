@@ -10,7 +10,7 @@ func ParseDateInput(dateString string) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, fmt.Errorf("invalid date format")
 	}
-	return parsedDate, nil
+	return parsedDate.UTC().Add(12 * time.Hour), nil
 }
 
 func HumanReadableFormat(dateTime time.Time) string {

@@ -6,9 +6,9 @@ func NumberOfCommits(isWeekday bool) int {
 
 	commits := 0
 
-	chance := 10
+	chance := 8
 	if isWeekday {
-		chance = 70
+		chance = 50
 	}
 
 	for i := 0; i < 3; i++ {
