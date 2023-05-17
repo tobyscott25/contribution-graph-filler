@@ -13,3 +13,4 @@ Fill out your contributions graph.
 ```bash
 go run main.go <path/to/private/repository>
 ```
+4. Push the generated commits to your private repository
