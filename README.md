@@ -1,6 +1,8 @@
 # Contribution Graph Filler
 
-Fill out your contributions graph.
+A fun little project that fills out your GitHub contributions graph.
+
+> **Note:** I don't use this personally, as I take pride in genuine commit history. This was a fun experiment, but using it undermines the integrity of authentic contributions. As such, I strongly discourage the use of this tool for any reason other than learning and experimenting.
 
 ![Example](screenshot.png)
 
