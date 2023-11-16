@@ -2,11 +2,11 @@
 
 A fun little project that fills out your GitHub contributions graph.
 
-> **Note:** I don't use this personally, as I take pride in genuine commit history. This was a fun experiment, but using it undermines the integrity of authentic contributions. As such, I strongly discourage the use of this tool for any reason other than learning and experimenting.
+> **Warning:** This was a fun experiment, I discourage actually using this unless you are happy for people to question the integrity of your authentic contributions.
 
 ![Example](screenshot.png)
 
-## Usage
+## Guide
 
 1. Create a new private repository on GitHub
 2. Ensure your contributions graph is configured to show private contributions
